@@ -1,0 +1,98 @@
+export const fileTableConfig = [
+  {
+    fileName: 'Report.jpeg',
+    description: 'Report File',
+    size: '6mb',
+    date: '',
+  },
+  {
+    fileName: 'Officer.png',
+    description: 'Officer Picture',
+    size: '3mb',
+    date: 'Jan 25, 2026',
+  },
+  {
+    fileName: 'File 1',
+    description: 'Announcement File',
+    size: '5mb',
+    date: 'Jan 22, 2026',
+  },
+  {
+    fileName: 'File 2',
+    description: 'Empty File',
+    size: '0kb',
+    date: 'Jan 20, 2026',
+  },
+  {
+    fileName: 'File 2',
+    description: 'Empty File',
+    size: '0kb',
+    date: 'Jan 20, 2026',
+  },
+  {
+    fileName: 'File 2',
+    description: 'Empty File',
+    size: '0kb',
+    date: 'Jan 20, 2026',
+  },
+  {
+    fileName: 'File 2',
+    description: 'Empty File',
+    size: '0kb',
+    date: 'Jan 20, 2026',
+  },
+  {
+    fileName: 'File 2',
+    description: 'Empty File',
+    size: '0kb',
+    date: 'Jan 20, 2026',
+  },
+  {
+    fileName: 'File 2',
+    description: 'Empty File',
+    size: '0kb',
+    date: 'Jan 20, 2026',
+  },
+  {
+    fileName: 'File 2',
+    description: 'Empty File',
+    size: '0kb',
+    date: 'Jan 20, 2026',
+  },
+  {
+    fileName: 'File 2',
+    description: 'Empty File',
+    size: '0kb',
+    date: 'Jan 20, 2026',
+  },
+  {
+    fileName: 'File 2',
+    description: 'Empty File',
+    size: '0kb',
+    date: 'Jan 20, 2026',
+  },
+  {
+    fileName: 'Report.jpeg',
+    description: 'Report File',
+    size: '6mb',
+    date: '',
+  },
+  {
+    fileName: 'Report.jpeg',
+    description: 'Report File',
+    size: '6mb',
+    date: '',
+  },
+  {
+    fileName: 'Report.jpeg',
+    description: 'Report File',
+    size: '6mb',
+    date: '',
+  },
+  {
+    fileName: 'Report.jpeg',
+    description: 'Report File',
+    size: '6mb',
+    date: '',
+  },
+];

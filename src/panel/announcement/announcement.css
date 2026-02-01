@@ -1,0 +1,259 @@
+.announcement-container {
+  display: flex;
+  flex-direction: column;
+  height: 97vh;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+/* Announcement-specific header styles */
+.announcement-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+  padding: 1rem 1.5rem;
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.announcement-header span {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #222;
+}
+
+.announcement-header p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Announcement-specific button styles */
+.btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem 1.5rem;
+}
+
+.btn-container span {
+  font-size: 1.25rem;
+}
+
+.btn-container button {
+  background-color: #5396d5;
+  border-radius: 8px; /* slightly less rounded */
+  padding: 0.35rem 0.7rem; /* smaller button size */
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem; /* smaller button text */
+  transition:
+    background 0.2s,
+    box-shadow 0.2s;
+}
+
+.btn-container button:hover {
+  background-color: #357abd;
+  box-shadow: 0 2px 8px #357abd26;
+  cursor: pointer;
+}
+
+.action-btn {
+  display: 'flex';
+  align-items: 'center';
+  justify-content: 'center';
+  border-radius: 0.55rem;
+  border: 1px solid #e0e0e0;
+}
+
+@keyframes spin360 {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.action-btn .spin {
+  animation: spin360 0.6s linear;
+}
+
+/* Table styles (dashboard look) */
+/*head*/
+.announcement-file-table input[type='checkbox'] {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  accent-color: #5396d5;
+  border-radius: 4px;
+}
+
+.table-header-black {
+  background: #111;
+}
+
+.table-header-black .table-head {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.table-header-black input[type='checkbox'] {
+  accent-color: #fff;
+}
+
+.table-header-black .table-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/*data table*/
+.announcement-file-table {
+  background-color: #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  max-height: 80vh;
+  padding: 0.5rem;
+}
+
+.announcement-file-table > span {
+  display: block;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 1.25rem 1.5rem 0.75rem;
+  color: #222;
+}
+
+.announcement-file-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: inherit;
+  font-size: 0.9rem;
+  background: #fff;
+  display: block;
+  overflow-x: auto;
+  overflow-y: auto;
+  font-size: 1.1rem;
+  border-radius: 0.5rem;
+  flex: 1;
+}
+
+.announcement-file-table thead {
+  display: table;
+  width: calc(100% - 8px);
+  table-layout: fixed;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 10;
+}
+
+.announcement-file-table tbody {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.announcement-file-table tr {
+  display: table-row;
+  width: 100%;
+}
+
+.announcement-file-table th,
+.announcement-file-table td {
+  padding: 1rem 2.5rem; /* wider horizontal spacing */
+  text-align: left;
+  background: #fff;
+  display: table-cell;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.85rem; /* smaller font size */
+}
+
+.announcement-file-table th {
+  font-size: 0.8rem; /* even smaller for header */
+  background: #fff;
+  color: #666;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+}
+
+.announcement-file-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.2s ease;
+}
+
+.announcement-file-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.announcement-file-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.announcement-file-table tbody tr.active {
+  background: #e8f4ff;
+}
+
+.announcement-file-table tbody tr.active td {
+  background: #e8f4ff;
+}
+
+.announcement-file-table table,
+.announcement-file-table tbody {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #b3c6e0 #f5f7fa; /* Firefox */
+}
+
+/*File buttons*/
+.file-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.file-btn img {
+  width: 20px; /* smaller icons */
+  height: 20px;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+
+.file-btn img:hover {
+  filter: brightness(0.8);
+}
+
+/* Webkit browsers */
+.announcement-file-table table::-webkit-scrollbar,
+.announcement-file-table tbody::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+  background: #f5f7fa;
+  border-radius: 8px;
+}
+
+.announcement-file-table table::-webkit-scrollbar-thumb,
+.announcement-file-table tbody::-webkit-scrollbar-thumb {
+  background: #b3c6e0;
+  border-radius: 8px;
+}
+
+.announcement-file-table table::-webkit-scrollbar-thumb:hover,
+.announcement-file-table tbody::-webkit-scrollbar-thumb:hover {
+  background: #8fa8c8;
+}
