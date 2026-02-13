@@ -9,8 +9,9 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
-  flex-shrink: 0;
+  flex-shrink: 1;
 }
 
 .contributor-header span {
@@ -28,10 +29,19 @@
 
 .avatar-list {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  padding: 1rem;
-  overflow: hidden;
-  border: 3px solid #f5f7fa;
-  border-radius: 1rem;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.avatar-row {
+  display: flex;
+  gap: 2rem;
+}
+
+.avatar-row-1 {
+  justify-content: flex-start;
+}
+
+.avatar-row-2 {
+  justify-content: center;
 }

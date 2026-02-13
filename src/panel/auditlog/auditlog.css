@@ -1,4 +1,4 @@
-.announcement-container {
+.audit-container {
   display: flex;
   flex-direction: column;
   height: 97vh;
@@ -6,8 +6,7 @@
   overflow: hidden;
 }
 
-/* Announcement-specific header styles */
-.announcement-header {
+.audit-header {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -18,19 +17,18 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
-.announcement-header span {
+.audit-header span {
   font-weight: 700;
   font-size: 1.5rem;
   color: #222;
 }
 
-.announcement-header p {
+.audit-header p {
   font-size: 0.9rem;
   color: #666;
   margin: 0;
 }
 
-/* Announcement-specific button styles */
 .btn-container {
   display: flex;
   align-items: center;
@@ -44,12 +42,12 @@
 
 .btn-container button {
   background-color: #5396d5;
-  border-radius: 8px; /* slightly less rounded */
-  padding: 0.35rem 0.7rem; /* smaller button size */
+  border-radius: 8px;
+  padding: 0.35rem 0.7rem;
   border: none;
   color: #fff;
   font-weight: 600;
-  font-size: 0.85rem; /* smaller button text */
+  font-size: 0.85rem;
   transition:
     background 0.2s,
     box-shadow 0.2s;
@@ -62,9 +60,9 @@
 }
 
 .action-btn {
-  display: 'flex';
-  align-items: 'center';
-  justify-content: 'center';
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 0.55rem;
   border: 1px solid #e0e0e0;
 }
@@ -79,9 +77,7 @@
   animation: spin360 0.6s linear;
 }
 
-/* Table styles (dashboard look) */
-/*head*/
-.announcement-file-table input[type='checkbox'] {
+.audit-file-table input[type='checkbox'] {
   cursor: pointer;
   width: 18px;
   height: 18px;
@@ -110,8 +106,7 @@
   gap: 1rem;
 }
 
-/*data table*/
-.announcement-file-table {
+.audit-file-table {
   background-color: #e0e0e0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
@@ -123,7 +118,7 @@
   padding: 0.5rem;
 }
 
-.announcement-file-table > span {
+.audit-file-table > span {
   display: block;
   font-weight: 600;
   font-size: 1.1rem;
@@ -131,7 +126,7 @@
   color: #222;
 }
 
-.announcement-file-table table {
+.audit-file-table table {
   width: 100%;
   border-collapse: collapse;
   font-family: inherit;
@@ -145,7 +140,7 @@
   flex: 1;
 }
 
-.announcement-file-table thead {
+.audit-file-table thead {
   display: table;
   width: calc(100% - 8px);
   table-layout: fixed;
@@ -155,31 +150,31 @@
   z-index: 10;
 }
 
-.announcement-file-table tbody {
+.audit-file-table tbody {
   display: table;
   width: 100%;
   table-layout: fixed;
 }
 
-.announcement-file-table tr {
+.audit-file-table tr {
   display: table-row;
   width: 100%;
 }
 
-.announcement-file-table th,
-.announcement-file-table td {
-  padding: 1rem 2.5rem; /* wider horizontal spacing */
+.audit-file-table th,
+.audit-file-table td {
+  padding: 1rem 2.5rem;
   text-align: left;
   background: #fff;
   display: table-cell;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.85rem; /* smaller font size */
+  font-size: 0.85rem;
 }
 
-.announcement-file-table th {
-  font-size: 0.8rem; /* even smaller for header */
+.audit-file-table th {
+  font-size: 0.8rem;
   background: #fff;
   color: #666;
   font-weight: 600;
@@ -190,34 +185,33 @@
   top: 0;
 }
 
-.announcement-file-table tbody tr {
+.audit-file-table tbody tr {
   border-bottom: 1px solid #f0f0f0;
   transition: background 0.2s ease;
 }
 
-.announcement-file-table tbody tr:hover {
+.audit-file-table tbody tr:hover {
   background: #f8f9fa;
 }
 
-.announcement-file-table tbody tr:last-child {
+.audit-file-table tbody tr:last-child {
   border-bottom: none;
 }
 
-.announcement-file-table tbody tr.active {
+.audit-file-table tbody tr.active {
   background: #e8f4ff;
 }
 
-.announcement-file-table tbody tr.active td {
+.audit-file-table tbody tr.active td {
   background: #e8f4ff;
 }
 
-.announcement-file-table table,
-.announcement-file-table tbody {
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: #b3c6e0 #f5f7fa; /* Firefox */
+.audit-file-table table,
+.audit-file-table tbody {
+  scrollbar-width: thin;
+  scrollbar-color: #b3c6e0 #f5f7fa;
 }
 
-/*File buttons*/
 .file-btn {
   display: flex;
   align-items: center;
@@ -226,7 +220,7 @@
 }
 
 .file-btn img {
-  width: 20px; /* smaller icons */
+  width: 20px;
   height: 20px;
   margin-left: 0.5rem;
   margin-right: 0.5rem;
@@ -238,52 +232,21 @@
   filter: brightness(0.8);
 }
 
-/* Webkit browsers */
-.announcement-file-table table::-webkit-scrollbar,
-.announcement-file-table tbody::-webkit-scrollbar {
+.audit-file-table table::-webkit-scrollbar,
+.audit-file-table tbody::-webkit-scrollbar {
   height: 8px;
   width: 8px;
   background: #f5f7fa;
   border-radius: 8px;
 }
 
-.announcement-file-table table::-webkit-scrollbar-thumb,
-.announcement-file-table tbody::-webkit-scrollbar-thumb {
+.audit-file-table table::-webkit-scrollbar-thumb,
+.audit-file-table tbody::-webkit-scrollbar-thumb {
   background: #b3c6e0;
   border-radius: 8px;
 }
 
-.announcement-file-table table::-webkit-scrollbar-thumb:hover,
-.announcement-file-table tbody::-webkit-scrollbar-thumb:hover {
+.audit-file-table table::-webkit-scrollbar-thumb:hover,
+.audit-file-table tbody::-webkit-scrollbar-thumb:hover {
   background: #8fa8c8;
-}
-
-.form-position {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 9999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  background: rgba(255, 255, 255, 0.3);
-}
-
-.modal-position {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 9999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  background: rgba(255, 255, 255, 0.3);
 }

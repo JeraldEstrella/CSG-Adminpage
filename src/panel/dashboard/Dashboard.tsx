@@ -33,7 +33,6 @@ const Dashboard = () => {
         <div className='graph-container'>
           <Barcharts />
           <Linechart />
-          <Recents />
         </div>
         {/*graph div*/}
         <div className='dashboard-file-table'>

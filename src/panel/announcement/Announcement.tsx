@@ -2,10 +2,15 @@ import { useState } from 'react';
 import './announcement.css';
 import { announcementConfig } from './announcementExample';
 import FilterSelect from '../../components/filter/Filter';
+import Form from '../../components/form/Form';
+import DeleteModal from '../../components/modals/deleteModal/DeleteModal';
 
 const filterOptions = ['All', 'Today', 'This Week', 'This Month'];
 
 const Announcement = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [id, setId] = useState('');
+  const [open, setOpen] = useState(false);
   const [spinning, setSpinning] = useState(false);
   const [active, setActive] = useState<string[]>([]);
   const [filter, setFilter] = useState<string>('');
@@ -26,6 +31,12 @@ const Announcement = () => {
     }, 600);
   };
 
+  const handleDelete = (id: string) => {
+    fetch(`/api/announcement/delete/${id}`, {
+      method: 'DELETE',
+    });
+  };
+
   return (
     <div className='announcement-container'>
       <div className='announcement-header'>
@@ -40,7 +51,7 @@ const Announcement = () => {
       </div>
       <span className='btn-container'>
         <span>{announcementConfig.length} Files</span>
-        <button>Add Document</button>
+        <button onClick={() => setOpen(!open)}>Add Document</button>
       </span>
       <div className='announcement-file-table'>
         <table>
@@ -112,14 +123,42 @@ const Announcement = () => {
                 <td>{file.description}</td>
                 <td>{file.date}</td>
                 <td className='file-btn'>
-                  <img src='/bin.png' alt='' />
-                  <img src='/edit.png' alt='' />
+                  <img
+                    src='/bin.png'
+                    alt=''
+                    onClick={() => {
+                      setId(file.fileName);
+                      setIsModalOpen(true);
+                    }}
+                  />
+                  <img
+                    src='/edit.png'
+                    alt=''
+                    onClick={() => {
+                      setOpen(!open);
+                      setId(file.fileName);
+                    }}
+                  />
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      {isModalOpen && (
+        <div className='modal-position'>
+          <DeleteModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onConfirm={() => handleDelete(id)}
+          />
+        </div>
+      )}
+      {open && (
+        <div className='form-position'>
+          <Form forType='announcement' id={id} setOpen={setOpen} />
+        </div>
+      )}
     </div>
   );
 };
