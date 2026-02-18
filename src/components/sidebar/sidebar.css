@@ -22,6 +22,10 @@
   gap: 0.5rem;
 }
 
+.sidebar-logo-img {
+  width: 50px;
+}
+
 .sidebar-details-text {
   display: flex;
   flex-direction: column;

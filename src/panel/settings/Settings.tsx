@@ -53,7 +53,7 @@ const Settings = () => {
   return (
     <div className='settings-container'>
       <div className='settings-header'>
-        <span>Audit Log</span>
+        <span>Settings</span>
         <p>
           {new Date().toLocaleDateString('en-US', {
             year: 'numeric',
@@ -117,20 +117,6 @@ const Settings = () => {
           <table>
             <thead className='table-header-black'>
               <tr>
-                <td>
-                  <input
-                    type='checkbox'
-                    title='Select All'
-                    checked={active.length === admins.length}
-                    onChange={() => {
-                      if (active.length === admins.length) {
-                        setActive([]);
-                      } else {
-                        setActive(admins.map((file) => file.name));
-                      }
-                    }}
-                  />
-                </td>
                 <td className='table-actions'>
                   <button
                     className='action-btn refresh-btn'
@@ -154,14 +140,6 @@ const Settings = () => {
                   className={`table-row ${active.includes(file.name) ? 'active' : ''}`}
                 >
                   <td>
-                    <span>
-                      <input
-                        type='checkbox'
-                        title={`Select ${file.name}`}
-                        checked={active.includes(file.name)}
-                        onChange={() => handleActive(file.name)}
-                      />
-                    </span>
                     <span className='name-data'>{file.name}</span>
                   </td>
                   <td className='file-btn'>

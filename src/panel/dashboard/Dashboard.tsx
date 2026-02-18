@@ -3,7 +3,6 @@ import './dashboard.css';
 import { useState } from 'react';
 import Barcharts from '../../components/charts/bar-chart/Barchart';
 import Linechart from '../../components/charts/line-chart/Linechart';
-import Recents from '../../components/charts/recents/Recents';
 
 const Dashboard = () => {
   const [active, setActive] = useState<string[]>([]);
@@ -40,20 +39,7 @@ const Dashboard = () => {
           <table>
             <thead>
               <tr className='table-header-black'>
-                <th>
-                  <input
-                    type='checkbox'
-                    title='Select All'
-                    checked={active.length === fileTableConfig.length}
-                    onChange={() => {
-                      if (active.length === fileTableConfig.length) {
-                        setActive([]);
-                      } else {
-                        setActive(fileTableConfig.map((file) => file.fileName));
-                      }
-                    }}
-                  />
-                </th>
+                <th>Action</th>
                 <th>File Name</th>
                 <th>Description</th>
                 <th>Size</th>
@@ -66,14 +52,7 @@ const Dashboard = () => {
                   key={idx}
                   className={`table-row ${active.includes(file.fileName) ? 'active' : ''}`}
                 >
-                  <td>
-                    <input
-                      type='checkbox'
-                      title={`Select ${file.fileName}`}
-                      checked={active.includes(file.fileName)}
-                      onChange={() => handleActive(file.fileName)}
-                    />
-                  </td>
+                  <td>{file.action}</td>
                   <td>{file.fileName}</td>
                   <td>{file.description}</td>
                   <td>{file.size}</td>

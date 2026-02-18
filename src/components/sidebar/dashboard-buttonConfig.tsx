@@ -17,7 +17,9 @@ export const buttonConfig = [
   {
     label: 'Contributors',
     name: 'contributors',
-    icon: <img src='/user.png' alt='Contributors' width={18} height={18} />,
+    icon: (
+      <img src='/user-solid.png' alt='Contributors' width={18} height={18} />
+    ),
   },
   {
     label: 'Audit Log',

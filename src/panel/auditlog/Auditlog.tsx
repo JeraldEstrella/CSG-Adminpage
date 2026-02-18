@@ -43,22 +43,6 @@ const Audit = () => {
           <thead>
             <tr className='table-header-black'>
               <th colSpan={5} className='table-head'>
-                <div>
-                  <input
-                    type='checkbox'
-                    title='Select All'
-                    checked={active.length === announcementConfig.length}
-                    onChange={() => {
-                      if (active.length === announcementConfig.length) {
-                        setActive([]);
-                      } else {
-                        setActive(
-                          announcementConfig.map((file) => file.fileName)
-                        );
-                      }
-                    }}
-                  />
-                </div>
                 <div className='table-actions'>
                   <FilterSelect
                     options={filterOptions}
@@ -95,22 +79,10 @@ const Audit = () => {
                 key={idx}
                 className={`table-row ${active.includes(file.fileName) ? 'active' : ''}`}
               >
-                <td>
-                  <input
-                    type='checkbox'
-                    title={`Select ${file.fileName}`}
-                    checked={active.includes(file.fileName)}
-                    onChange={() => handleActive(file.fileName)}
-                  />
-                </td>
                 <td>{file.imageName}</td>
                 <td>{file.fileName}</td>
                 <td>{file.description}</td>
                 <td>{file.date}</td>
-                <td className='file-btn'>
-                  <img src='/bin.png' alt='' />
-                  <img src='/edit.png' alt='' />
-                </td>
               </tr>
             ))}
           </tbody>

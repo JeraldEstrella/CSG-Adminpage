@@ -11,7 +11,11 @@ const Sidebar = ({ panel, setPanel }: SidebarProps) => {
     <div className='sidebar-container'>
       <div className='sidebar-top'>
         <div className='sidebar-details'>
-          <img src='/vite.svg' alt='' width={55} />
+          <img
+            src='/CSG_logo.svg'
+            alt='CSG Logo'
+            className='sidebar-logo-img'
+          />
           <div className='sidebar-details-text'>
             <span>Online Information</span>
             <span className='subtitle'>Transparency System</span>

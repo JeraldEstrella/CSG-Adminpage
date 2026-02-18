@@ -77,32 +77,24 @@
   animation: spin360 0.6s linear;
 }
 
-.audit-file-table input[type='checkbox'] {
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
-  accent-color: #5396d5;
-  border-radius: 4px;
-}
-
 .table-header-black {
+  display: flex;
   background: #111;
+  width: 100%;
 }
 
 .table-header-black .table-head {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-.table-header-black input[type='checkbox'] {
-  accent-color: #fff;
+  width: 93%;
+  justify-content: flex-end;
 }
 
 .table-header-black .table-actions {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
   gap: 1rem;
 }
 
@@ -116,6 +108,7 @@
   border-radius: 0.5rem;
   max-height: 80vh;
   padding: 0.5rem;
+  margin-top: 2rem;
 }
 
 .audit-file-table > span {
@@ -164,13 +157,14 @@
 .audit-file-table th,
 .audit-file-table td {
   padding: 1rem 2.5rem;
-  text-align: left;
+  text-align: center;
   background: #fff;
   display: table-cell;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 0.85rem;
+  width: 25%;
 }
 
 .audit-file-table th {

@@ -9,7 +9,9 @@ const DEFAULT_PANEL = 'dashboard';
 const App = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const panelParam = searchParams.get('panel') || DEFAULT_PANEL;
+
   const [panel, setPanel] = useState(panelParam);
+  //state the controls what panel to show
 
   useEffect(() => {
     setSearchParams({ panel });

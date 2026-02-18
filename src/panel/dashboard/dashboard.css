@@ -99,12 +99,37 @@
 .dashboard-file-table th,
 .dashboard-file-table td {
   padding: 1rem 1.5rem;
-  text-align: left;
+  text-align: center;
   background: #fff;
   display: table-cell;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.dashboard-file-table th:nth-child(1),
+.dashboard-file-table td:nth-child(1) {
+  width: 20%;
+}
+
+.dashboard-file-table th:nth-child(2),
+.dashboard-file-table td:nth-child(2) {
+  width: 20%;
+}
+
+.dashboard-file-table th:nth-child(3),
+.dashboard-file-table td:nth-child(3) {
+  width: 25%;
+}
+
+.dashboard-file-table th:nth-child(4),
+.dashboard-file-table td:nth-child(4) {
+  width: 20%;
+}
+
+.dashboard-file-table th:nth-child(5),
+.dashboard-file-table td:nth-child(5) {
+  width: 20%;
 }
 
 .dashboard-file-table th {

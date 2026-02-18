@@ -1,6 +1,8 @@
 .settings-container {
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
+  padding: 2rem 0;
 }
 
 .settings-header {
@@ -196,7 +198,7 @@ span {
 .table-header-black tr {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 0.5rem;
   background: #111;
   color: #fff;
