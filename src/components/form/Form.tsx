@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react';
 import './form.css';
+import type { Box } from '../pdf-selector-components/pdf-selector';
+import PdfSelector from '../pdf-selector-components/pdf-selector';
 
 interface FormProps {
   forType: 'announcement' | 'document';
@@ -10,7 +12,11 @@ interface FormProps {
 const Form = ({ forType, id, setOpen }: FormProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [showPdfSelector, setShowPdfSelector] = useState(false);
 
+  const [pdf, setPdf] = useState<File | null>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [selectedBoxes, setSelectedBoxes] = useState<Box[]>([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
@@ -23,13 +29,12 @@ const Form = ({ forType, id, setOpen }: FormProps) => {
     e.preventDefault();
     const formData = new FormData();
 
-    const file = fileInputRef.current?.files?.[0];
-
     formData.append('title', title);
     formData.append('description', description);
 
-    if (file) {
-      formData.append('image', file);
+    if (pdf) {
+      formData.append('file', pdf);
+      formData.append('boxes', JSON.stringify(selectedBoxes));
     }
 
     fetch(url, {
@@ -38,19 +43,32 @@ const Form = ({ forType, id, setOpen }: FormProps) => {
     });
   };
 
-  const handleImageClick = () => {
-    fileInputRef.current?.click();
-  };
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result as string);
-      reader.readAsDataURL(file);
+      if (file.type === 'application/pdf') {
+        setPreview(file.name);
+        setPdf(file);
+        setPdfUrl(URL.createObjectURL(file));
+        setShowPdfSelector(true);
+      } else {
+        const reader = new FileReader();
+        reader.onloadend = () => setPreview(reader.result as string);
+        reader.readAsDataURL(file);
+        setPdf(null);
+        setPdfUrl(null);
+        setShowPdfSelector(false);
+      }
     } else {
       setPreview(null);
+      setPdf(null);
+      setPdfUrl(null);
+      setShowPdfSelector(false);
     }
+  };
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
   };
 
   return (
@@ -58,6 +76,53 @@ const Form = ({ forType, id, setOpen }: FormProps) => {
       <div className='form-header'>
         <h2>Add New File</h2>
       </div>
+
+      {/* PDF Selector Modal */}
+      {showPdfSelector && pdfUrl && (
+        <div
+          className='pdf-selector-overlay'
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+          }}
+        >
+          <div
+            className='pdf-selector-modal'
+            style={{
+              backgroundColor: 'white',
+              padding: '1rem',
+              borderRadius: '8px',
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+              overflow: 'auto',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginBottom: '1rem',
+              }}
+            >
+              <h3>Select areas on PDF</h3>
+              <button
+                type='button'
+                onClick={() => setShowPdfSelector(false)}
+                style={{ padding: '0.5rem 1rem' }}
+              >
+                Done ({selectedBoxes.length} selected)
+              </button>
+            </div>
+            <PdfSelector fileUrl={pdfUrl} onBoxesChange={setSelectedBoxes} />
+          </div>
+        </div>
+      )}
+
       <form className='form-layout' onSubmit={handleSubmit}>
         <div className='form-fields'>
           <div className='form-group'>
@@ -82,8 +147,9 @@ const Form = ({ forType, id, setOpen }: FormProps) => {
             ></textarea>
           </div>
         </div>
+
         <div className='image-upload'>
-          <label>Image</label>
+          <label>{forType === 'document' ? 'File' : 'PDF'}</label>
           <div
             className={`image-preview${preview ? ' has-image' : ''}`}
             id='imagePreview'
@@ -93,18 +159,31 @@ const Form = ({ forType, id, setOpen }: FormProps) => {
             {!preview ? (
               <div className='image-placeholder'>
                 <div className='upload-icon'>📁</div>
-                {forType === 'announcement' ? (
-                  <div className='upload-text'>
-                    <strong>Click to upload</strong> or drag and drop
-                    <br />
-                    PNG, JPG up to 10MB
-                  </div>
-                ) : (
-                  <div className='upload-text'>
-                    <strong>Click to upload</strong> <br />
-                    File
+                <div className='upload-text'>
+                  <strong>Click to upload</strong>
+                  <br />
+                  PDF files
+                </div>
+              </div>
+            ) : preview?.endsWith('.pdf') ? (
+              <div className='pdf-preview'>
+                <div className='upload-icon'>📄</div>
+                <div className='upload-text'>{preview}</div>
+                {selectedBoxes.length > 0 && (
+                  <div style={{ marginTop: '0.5rem', color: 'green' }}>
+                    ✓ {selectedBoxes.length} area(s) selected
                   </div>
                 )}
+                <button
+                  type='button'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowPdfSelector(true);
+                  }}
+                  style={{ marginTop: '0.5rem' }}
+                >
+                  Edit selections
+                </button>
               </div>
             ) : (
               <img id='previewImage' alt='Preview' src={preview} />
@@ -112,15 +191,14 @@ const Form = ({ forType, id, setOpen }: FormProps) => {
           </div>
           <input
             type='file'
-            id='fileInput'
-            accept='image/*'
             ref={fileInputRef}
-            name='file'
-            placeholder='image'
+            title='Select a file to upload'
+            accept='application/pdf'
             onChange={handleFileChange}
             style={{ display: 'none' }}
           />
         </div>
+
         <div className='form-actions'>
           <button
             type='button'

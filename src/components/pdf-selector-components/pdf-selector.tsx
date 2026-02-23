@@ -1,143 +1,246 @@
-import React, { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import PdfRedactorModal from "../pdf-selector-modal/Pdf-selector-modal.tsx";
-// @ts-ignore
-import pdfjsLib from "./pdfjs.js"; //
+import { useEffect, useRef, useState } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
+import pdfjsLib from './pdfjs';
+import { createPortal } from 'react-dom';
 
-interface Box {
+export type Box = {
   id: string;
   page: number;
-  startX: number;
-  startY: number;
   x: number;
   y: number;
   width: number;
   height: number;
+};
+
+type DraftBox = Box & {
+  startX: number;
+  startY: number;
+};
+
+type PageSize = {
+  width: number;
+  height: number;
+};
+
+type PdfSelectorProps = {
+  fileUrl: string;
+  onBoxesChange?: (boxes: Box[]) => void;
+};
+
+function OverlayPortal({
+  page,
+  children,
+}: {
+  page: number;
+  children: ReactNode;
+}) {
+  const container = document.querySelector(`[data-page="${page}"]`);
+  if (!container) return null;
+
+  return createPortal(children, container);
 }
 
-export default function PdfRedactor() {
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [file, setFile] = useState<string>("");
-  const [pages, setPages] = useState<number[]>([]);
-  const [pageSizes, setPageSizes] = useState<Record<number, { w: number; h: number }>>({});
-  const [boxes, setBoxes] = useState<Box[]>([]);
-  const [draft, setDraft] = useState<Box | null>(null);
+function Overlay({
+  page,
+  boxes,
+  vpWidth,
+  vpHeight,
+  draft,
+  isDrawing,
+  onMouseDown,
+  onMouseMove,
+  onMouseUp,
+}: {
+  page: number;
+  boxes: Box[];
+  vpWidth: number;
+  vpHeight: number;
+  draft: DraftBox | null;
+  isDrawing: boolean;
+  onMouseDown: (e: MouseEvent<SVGSVGElement>, page: number) => void;
+  onMouseMove: (e: MouseEvent<SVGSVGElement>) => void;
+  onMouseUp: () => void;
+}) {
+  return (
+    <svg
+      onMouseDown={(e) => {
+        onMouseDown(e, page);
+      }}
+      onMouseMove={onMouseMove}
+      onMouseUp={onMouseUp}
+      className='absolute inset-0 cursor-crosshair'
+      width={vpWidth}
+      height={vpHeight}
+    >
+      {boxes
+        .filter((b) => b.page === page)
+        .map((box) => (
+          <rect
+            key={box.id}
+            x={box.x * vpWidth}
+            y={box.y * vpHeight}
+            width={box.width * vpWidth}
+            height={box.height * vpHeight}
+            fill='rgba(0,0,0,0.15)'
+            stroke='black'
+            strokeWidth={2}
+          ></rect>
+        ))}
 
-  // Drawing Handlers
-  const onMouseDown = (e: React.MouseEvent, page: number) => {
+      {draft && draft.page === page && (
+        <rect
+          x={draft.x * vpWidth}
+          y={draft.y * vpHeight}
+          width={draft.width * vpWidth}
+          height={draft.height * vpHeight}
+          fill='rgba(0,0,0,0.15)'
+          stroke='blue'
+          strokeWidth={2}
+        />
+      )}
+    </svg>
+  );
+}
+
+export function PdfSelector({ fileUrl, onBoxesChange }: PdfSelectorProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [scale] = useState<number>(1.25);
+  const [pages, setPages] = useState<number[]>([]);
+  const [pageSizes, setPageSizes] = useState<Record<number, PageSize>>({});
+  const [boxes, setBoxes] = useState<Box[]>([]);
+  const [draft, setDraft] = useState<DraftBox | null>(null);
+  const [isDrawing, setIsDrawing] = useState<boolean>(false);
+
+  function onMouseDown(e: MouseEvent<SVGSVGElement>, page: number) {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width;
     const y = (e.clientY - rect.top) / rect.height;
-    setDraft({ id: crypto.randomUUID(), page, startX: x, startY: y, x, y, width: 0, height: 0 });
-  };
 
-  const onMouseMove = (e: React.MouseEvent) => {
+    setIsDrawing(true);
+    setDraft({
+      id: crypto.randomUUID(),
+      page,
+      startX: x,
+      startY: y,
+      x,
+      y,
+      width: 0,
+      height: 0,
+    });
+  }
+
+  function onMouseMove(e: MouseEvent<SVGSVGElement>) {
     if (!draft) return;
+
     const rect = e.currentTarget.getBoundingClientRect();
-    const cx = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    const cy = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
-    setDraft(prev => prev ? ({
-      ...prev,
-      x: Math.min(prev.startX, cx),
-      y: Math.min(prev.startY, cy),
-      width: Math.abs(cx - prev.startX),
-      height: Math.abs(cy - prev.startY)
-    }) : null);
-  };
+    const cx = (e.clientX - rect.left) / rect.width;
+    const cy = (e.clientY - rect.top) / rect.height;
 
-  const onMouseUp = () => {
-    if (draft && draft.width > 0.005) setBoxes(prev => [...prev, draft]);
+    setDraft((d) => {
+      if (!d) return d;
+
+      const x = Math.min(d.startX, cx);
+      const y = Math.min(d.startY, cy);
+      const width = Math.abs(cx - d.startX);
+      const height = Math.abs(cy - d.startY);
+
+      return { ...d, x, y, width, height };
+    });
+  }
+
+  function onMouseUp() {
+    if (!draft) return;
+
+    setBoxes((b) => {
+      const newBoxes = [...b, draft];
+      onBoxesChange?.(newBoxes);
+      return newBoxes;
+    });
     setDraft(null);
-  };
+    setIsDrawing(false);
+  }
 
-  // PDF Loading & Rendering
   useEffect(() => {
-    if (!file || !isOpen || !containerRef.current) return;
-    
-    async function renderPdf() {
-      const pdf = await pdfjsLib.getDocument(file).promise;
-      containerRef.current!.innerHTML = "";
-      const sizes: Record<number, { w: number; h: number }> = {};
+    let cancelled = false;
 
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 1.5 });
-        
-        // PAGE WRAPPER
-        const wrapper = document.createElement("div");
-        wrapper.dataset.page = String(i);
-        wrapper.className = "pdf-page-wrapper";
-        wrapper.style.width = `${viewport.width}px`;
-        wrapper.style.height = `${viewport.height}px`;
+    async function render() {
+      if (!containerRef.current || !fileUrl) return;
 
-        const canvas = document.createElement("canvas");
-        canvas.className = "pdf-canvas";
+      containerRef.current.innerHTML = '';
+
+      const pdf = await pdfjsLib.getDocument(fileUrl).promise;
+
+      const nextPages: number[] = [];
+      const nextSizes: Record<number, PageSize> = {};
+
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        if (cancelled) return;
+
+        const page = await pdf.getPage(pageNum);
+        const viewport = page.getViewport({ scale });
+
+        const pageWrapper = document.createElement('div');
+        pageWrapper.dataset.page = String(pageNum);
+        pageWrapper.className = 'relative mb-6';
+
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) continue;
+
         canvas.width = viewport.width;
         canvas.height = viewport.height;
-        
-        wrapper.appendChild(canvas);
-        containerRef.current!.appendChild(wrapper);
-        await page.render({ canvasContext: canvas.getContext("2d")!, viewport }).promise;
-        
-        sizes[i] = { w: viewport.width, h: viewport.height };
+
+        pageWrapper.appendChild(canvas);
+        containerRef.current.appendChild(pageWrapper);
+
+        await page.render({
+          canvasContext: ctx,
+          viewport,
+          canvas,
+        }).promise;
+
+        nextPages.push(pageNum);
+        nextSizes[pageNum] = {
+          width: viewport.width,
+          height: viewport.height,
+        };
       }
-      setPages(Array.from({ length: pdf.numPages }, (_, i) => i + 1));
-      setPageSizes(sizes);
+
+      setPages(nextPages);
+      setPageSizes(nextSizes);
     }
-    renderPdf();
-  }, [file, isOpen]);
+
+    render();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [fileUrl, scale]);
 
   return (
-    <div className="p-4">
-      <button onClick={() => setIsOpen(true)} className="bg-blue-600 text-white p-2 rounded">
-        Launch Redactor
-      </button>
+    <div className='w-full flex justify-center'>
+      <div ref={containerRef} className='w-full max-w-5xl'></div>
 
-      <PdfRedactorModal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Select Redaction Areas">
-        <div className="flex flex-col h-full bg-gray-500 overflow-hidden">
-          {/* Toolbar */}
-          <div className="p-4 bg-white border-b flex justify-between z-50">
-            <input type="file" accept="application/pdf" onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) setFile(URL.createObjectURL(f));
-            }} />
-            <button onClick={() => setBoxes(prev => prev.slice(0, -1))} className="border px-4 py-1 rounded">Undo</button>
-          </div>
-
-          {/* PDF Pages */}
-          <div className="flex-1 overflow-y-auto p-8 scrollbar-hide">
-            <div ref={containerRef} className="relative" />
-            {pages.map(p => {
-              const target = document.querySelector(`[data-page="${p}"]`);
-              if (!target || !pageSizes[p]) return null;
-
-              return createPortal(
-                <svg
-                  onMouseDown={(e) => onMouseDown(e, p)}
-                  onMouseMove={onMouseMove}
-                  onMouseUp={onMouseUp}
-                  className="selection-overlay-svg"
-                  width={pageSizes[p].w}
-                  height={pageSizes[p].h}
-                >
-                  {boxes.filter(b => b.page === p).map(box => (
-                    <rect key={box.id} x={box.x * pageSizes[p].w} y={box.y * pageSizes[p].h} 
-                          width={box.width * pageSizes[p].w} height={box.height * pageSizes[p].h}
-                          fill="rgba(0,0,0,0.5)" stroke="#000" />
-                  ))}
-                  {draft?.page === p && (
-                    <rect x={draft.x * pageSizes[p].w} y={draft.y * pageSizes[p].h}
-                          width={draft.width * pageSizes[p].w} height={draft.height * pageSizes[p].h}
-                          fill="rgba(59,130,246,0.2)" stroke="#3b82f6" strokeDasharray="4" />
-                  )}
-                </svg>,
-                target
-              );
-            })}
-          </div>
-        </div>
-      </PdfRedactorModal>
+      {pages.map((pageNum) => {
+        const size = pageSizes[pageNum] || { width: 0, height: 0 };
+        return (
+          <OverlayPortal key={pageNum} page={pageNum}>
+            <Overlay
+              onMouseDown={onMouseDown}
+              onMouseMove={onMouseMove}
+              onMouseUp={onMouseUp}
+              draft={draft}
+              isDrawing={isDrawing}
+              page={pageNum}
+              boxes={boxes}
+              vpWidth={size.width}
+              vpHeight={size.height}
+            ></Overlay>
+          </OverlayPortal>
+        );
+      })}
     </div>
   );
 }
+
+export default PdfSelector;
